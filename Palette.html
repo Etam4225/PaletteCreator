@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Palette Example</title>
+</head>
+<style>
+#monochromatic{
+  position:relative;
+}
+#complementary{
+  position:relative;
+}
+</style>
+
+<body>
+<input id = "color" type = "text" placeholder = "RGB values" onchange = "createPalatte()"> </input>
+
+<div id = "monochromatic">
+  Monochromatic Palette Sample
+  <br>
+  <div id = "color1" style = "height:75px;">Color1</div>
+  <div id = "color2" style = "height:75px;">Color2</div>
+  <div id = "color3" style = "height:75px;">Color3</div>
+  <div id = "color4" style = "height:75px;">Color4</div>
+  <div id = "color5" style = "height:75px;">Color5</div>
+</div>
+<br>
+<div id = "complementary">
+  Complementary Palette Sample
+  <br>
+  <div id = "color6" style = "height:75px;">Color1</div>
+  <div id = "color7" style = "height:75px;">Color2</div>
+  <!-- <div id = "color8" style = "height:75px;">Color3</div> -->
+  <div id = "color9" style = "height:75px;">Color3</div>
+  <div id = "color10" style = "height:75px;">Color4</div>
+</div>
+<br>
+<div id = "anagolous">
+  Anagolous Palette Sample
+  <br>
+  <div id = "color11" style = "height:75px;">Color1</div>
+  <div id = "color12" style = "height:75px;">Color2</div>
+  <!-- <div id = "color8" style = "height:75px;">Color3</div> -->
+  <div id = "color13" style = "height:75px;">Color3</div>
+</div>
+
+</body>
+<script>
+
+function createPalatte(){
+  var input = document.getElementById("color").value;
+  var arrInput = input.split(" ")
+  console.log(input.split(" "))
+  var hsl = RGBToHSL(arrInput[0], arrInput[1], arrInput[2])
+  console.log(hsl.split(","))
+  var hslArr = hsl.split(",")
+  var h = hslArr[0]
+  var comph = hslArr[0]
+
+  //complimentary of h (adding 180)
+  if(comph > 360){
+    comph = 360 - (h+180) //get opposite of current color
+  }else{
+    comph = h + 180
+  }
+
+  var s = hslArr[1]
+  var l = hslArr[2]
+
+  var hslString = "hsl(" + h + "," + s + '%,'
+  var hslTemp = "hsl("
+  console.log(hslString)
+
+  //Anagolous Color done outside loop
+  if(h < 30){ //find the anaglous colors -30 of the original color and +30 of the original color
+    var smallh = 360 - (30 - h)
+    console.log(smallh)
+  }else{
+    var smallh = h - 30
+    console.log(smallh)
+  }
+  if(h > 330){
+    var bigh = (h + 30) - 360
+  }else{
+    var bigh = h + 30
+  }
+  //create the colors onto the anaglous palatte
+  document.getElementById("color11").style.backgroundColor = "hsl(" + smallh + "," + s + '%,' + l + '%)'
+  document.getElementById("color12").style.backgroundColor = "hsl(" + h + "," + s + '%,' + l + '%)'
+  document.getElementById("color13").style.backgroundColor = "hsl(" + bigh + "," + s + '%,' + l + '%)'
+
+  var color = "color"
+
+  for(let i = 0; i < 5; i++){
+      //Creates the monochromatic palette
+      document.getElementById(color+(i+1)).style.backgroundColor = hslString + (i * 10 + 7) + '%)'
+      console.log(hslString + i * 20 + '%)')
+      //document.getElementById(color+(i+6)).style.backgroundColor =
+
+      //Creates the complementary palette 4 colors chosen only
+      if(i == 0){
+        document.getElementById(color+(i+6)).style.backgroundColor = "hsl(" + h + "," + s + '%,' + l + '%)'
+        console.log("hsl(" + h + "," + s + '%,' + l + '%)')
+      }else if (i == 1){
+        document.getElementById(color+(i+6)).style.backgroundColor = "hsl(" + h + "," + s + '%,' + (i*10 + 7) + '%)'
+        console.log("hsl(" + h + "," + s + '%,' + (i*10 + 7) + '%)')
+      }else if (i == 2){
+        // document.getElementById(color+(i+6)).style.backgroundColor = "hsl(" + h + "," + s + '%,' + (i*10 + 7) + '%)'
+        // console.log("hsl(" + h + "," + s + '%,' + (i*10 + 7) + '%)')
+      }else if(i == 3){
+        document.getElementById(color+(i+6)).style.backgroundColor = "hsl(" + comph + "," + s + '%,' + l + '%)'
+      }else if(i == 4){
+        var temp = l + 20
+        document.getElementById(color+(i+6)).style.backgroundColor = "hsl(" + comph + "," + s + '%,' + i*20 + '%)'
+      }
+
+      //console.log((color+(i+6)))
+
+  }
+
+}
+
+function RGBToHSL(r,g,b){ //code following https://css-tricks.com/converting-color-spaces-in-javascript/
+  r /= 255;
+  g /= 255;
+  b /= 255;
+
+  // Find greatest and smallest channel values
+  let cmin = Math.min(r,g,b),
+      cmax = Math.max(r,g,b),
+      delta = cmax - cmin,
+      h = 0,
+      s = 0,
+      l = 0;
+
+      // Calculate hue
+      // No difference
+      if (delta == 0)
+        h = 0;
+      // Red is max
+      else if (cmax == r)
+        h = ((g - b) / delta) % 6;
+      // Green is max
+      else if (cmax == g)
+        h = (b - r) / delta + 2;
+      // Blue is max
+      else
+        h = (r - g) / delta + 4;
+
+      h = Math.round(h * 60);
+
+      // Make negative hues positive behind 360°
+      if (h < 0)
+          h += 360;
+
+          // Calculate lightness
+      l = (cmax + cmin) / 2;
+
+      // Calculate saturation
+      s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+
+      // Multiply l and s by 100
+      s = +(s * 100).toFixed(1);
+      l = +(l * 100).toFixed(1);
+
+      console.log("hsl(" + h + "," + s + "," + l + ")")
+      // console.log("hsl(" + h + "," + s + "%," + l + "%)")
+      return h + "," + s + "," + l;
+}
+
+</script>
+</html>
