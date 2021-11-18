@@ -47,6 +47,16 @@
   <div id = "color13" style = "height:75px;">Color3</div>
 </div>
 
+<br>
+
+<div id = "splitCompl">
+  Split Comp Palette Sample
+  <br>
+  <div id = "color16" style = "height:75px;">Color1</div>
+  <div id = "color17" style = "height:75px;">Color2</div>
+  <div id = "color18" style = "height:75px;">Color3</div>
+</div>
+
 </body>
 <script>
 
@@ -60,8 +70,8 @@ function createPalatte(){
   var h = hslArr[0]
   var comph = hslArr[0]
 
-  //complimentary of h (adding 180)
-  if(comph > 360){
+  //complimentary of h (adding 180) - used for complementary palettes
+  if((h+180) > 360){
     comph = 360 - (h+180) //get opposite of current color
   }else{
     comph = h + 180
@@ -72,15 +82,16 @@ function createPalatte(){
 
   var hslString = "hsl(" + h + "," + s + '%,'
   var hslTemp = "hsl("
-  console.log(hslString)
+  //console.log(hslString)
+
 
   //Anagolous Color done outside loop
   if(h < 30){ //find the anaglous colors -30 of the original color and +30 of the original color
     var smallh = 360 - (30 - h)
-    console.log(smallh)
+    //console.log(smallh)
   }else{
     var smallh = h - 30
-    console.log(smallh)
+    //console.log(smallh)
   }
   if(h > 330){
     var bigh = (h + 30) - 360
@@ -92,8 +103,33 @@ function createPalatte(){
   document.getElementById("color12").style.backgroundColor = "hsl(" + h + "," + s + '%,' + l + '%)'
   document.getElementById("color13").style.backgroundColor = "hsl(" + bigh + "," + s + '%,' + l + '%)'
 
+
+  if((comph - 30) < 0){
+    smallh = 360 + (comph - 30)
+  }else{
+    smallh = comph - 30
+  }
+
+  if((parseInt(comph) + 30) > 360){
+    bigh = 360 - (parseInt(comph) + 30)
+      console.log("test big h: " + bigh)
+  }else{
+    bigh = parseInt(comph) + 30
+      console.log("test1 big h: " + bigh)
+  }
+  console.log("comph: "+ comph)
+  console.log("small h: " + smallh)
+  console.log("big h: " + bigh)
+
+  //create SPLIT-COMPLEMENTARY palate (setting colors)
+  document.getElementById("color16").style.backgroundColor = "hsl(" + smallh + "," + s + '%,' + l + '%)'
+  document.getElementById("color17").style.backgroundColor = "hsl(" + h + "," + s + '%,' + l + '%)'
+  document.getElementById("color18").style.backgroundColor = "hsl(" + bigh + "," + s + '%,' + l + '%)'
+
   var color = "color"
 
+
+//for loop not really necessary in this case but i've left it in 
   for(let i = 0; i < 5; i++){
       //Creates the monochromatic palette
       document.getElementById(color+(i+1)).style.backgroundColor = hslString + (i * 10 + 7) + '%)'
